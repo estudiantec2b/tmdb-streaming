@@ -1,0 +1,19 @@
+/* Estilo para el Navbar */
+.navbar {
+  position: fixed; /* Fija el navbar en la parte superior */
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro translúcido */
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: center; /* Centra el título */
+  z-index: 1000; /* Asegura que el navbar esté sobre otros elementos */
+}
+
+.navbar-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 0;
+}
