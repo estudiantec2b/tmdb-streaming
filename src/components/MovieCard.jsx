@@ -1,16 +1,17 @@
-import React from 'react';
+import React from "react";
+import "../styles/MovieCard.css";
 
-const MovieCard = ({ movie }) => {
-  const imageUrl = movie.poster_path
+function MovieCard({ movie }) {
+  const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : 'https://via.placeholder.com/500x750?text=No+Image';
+    : "https://via.placeholder.com/500x750?text=Sin+Imagen";
 
   return (
     <div className="movie-card">
-      <img src={imageUrl} alt={movie.title} />
+      <img src={posterUrl} alt={movie.title} />
       <h3>{movie.title}</h3>
     </div>
   );
-};
+}
 
 export default MovieCard;

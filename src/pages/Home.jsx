@@ -1,83 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import { getMoviesByCategory } from '../services/api';
-import MovieCard from '../components/MovieCard';
-import './Home.css';
+import React, { useEffect, useState } from "react";
+import { getMoviesByCategory } from "../services/api";
+import MovieCard from "../components/MovieCard";
+import "../styles/Home.css";
 
-const Home = () => {
+const categories = {
+  popular: "Populares",
+  top_rated: "Mejor valoradas",
+  upcoming: "Próximamente",
+};
+
+function Home() {
+  const [selectedCategory, setSelectedCategory] = useState("popular");
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState('popular');
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const categories = [
-    { id: 'popular', name: 'Populares' },
-    { id: 'top_rated', name: 'Mejor valoradas' },
-    { id: 'upcoming', name: 'Próximamente' },
-    { id: 'action', name: 'Acción' },
-    { id: 'comedy', name: 'Comedia' },
-    { id: 'drama', name: 'Drama' },
-    { id: 'thriller', name: 'Suspenso' },
-    { id: 'animation', name: 'Animación' },
-  ];
-
-
-  const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
-    setCurrentPage(1);  // Reseteamos la página cuando cambia la categoría
-  };
-
   useEffect(() => {
-  const loadMovies = async () => {
+    loadMovies(selectedCategory, 1, true);
+  }, [selectedCategory]);
+
+  const loadMovies = async (category, page = 1, reset = false) => {
     setLoading(true);
     try {
-      const data = await getMoviesByCategory(category, currentPage);
-      if (currentPage === 1) {
-        setMovies(data);  // Al cambiar de categoría, reseteamos las películas
+      const data = await getMoviesByCategory(category, page);
+      if (reset) {
+        setMovies(data.results);
       } else {
-        setMovies((prevMovies) => [...prevMovies, ...data]);  // Cargar más películas
+        setMovies((prev) => [...prev, ...data.results]);
       }
+      setCurrentPage(page);
     } catch (error) {
-      console.error('Error al cargar las películas:', error);
+      console.error("Error al cargar las películas:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  loadMovies();
-}, [category, currentPage]);
-
-
-  const loadMoreMovies = () => {
-    setCurrentPage((prevPage) => prevPage + 1);  // Cargamos la siguiente página
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
   };
 
-  if (loading) return <div className="loading">Cargando...</div>;
+  const handleLoadMore = () => {
+    loadMovies(selectedCategory, currentPage + 1);
+  };
 
   return (
     <div className="home">
       <div className="category-dropdown">
-        <select value={category} onChange={handleCategoryChange}>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
+        <select value={selectedCategory} onChange={handleCategoryChange}>
+          {Object.entries(categories).map(([key, label]) => (
+            <option key={key} value={key}>
+              {label}
             </option>
           ))}
         </select>
       </div>
-
-      <div className="movie-grid">
-        {movies.length > 0 ? (
-          movies.map((movie) => <MovieCard key={movie.id} movie={movie} />)
-        ) : (
-          <p>No se encontraron películas.</p>
-        )}
-      </div>
-
-      <button onClick={loadMoreMovies} disabled={loading}>
-        {loading ? 'Cargando...' : 'Cargar más películas'}
-      </button>
+      {loading && currentPage === 1 ? (
+        <p>Cargando...</p>
+      ) : (
+        <>
+          <div className="movie-grid">
+            {movies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
+          {loading ? (
+            <p>Cargando más...</p>
+          ) : (
+            <button onClick={handleLoadMore}>Cargar más</button>
+          )}
+        </>
+      )}
     </div>
   );
-};
+}
 
 export default Home;

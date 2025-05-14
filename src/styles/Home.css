@@ -1,0 +1,23 @@
+.home {
+  padding: 20px;
+  background-color: #111;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.category-dropdown {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.category-dropdown select {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.movie-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}

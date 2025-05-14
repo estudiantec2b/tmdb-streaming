@@ -1,0 +1,18 @@
+.movie-card {
+  width: 180px;
+  text-align: center;
+  background-color: #222;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.movie-card img {
+  width: 100%;
+  border-bottom: 2px solid #444;
+}
+
+.movie-card h3 {
+  font-size: 14px;
+  padding: 10px;
+  color: #fff;
+}
